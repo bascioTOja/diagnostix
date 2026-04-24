@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Wizyty klienta{% endblock %}
+{% block content %}
+<div class="appointments-page">
+<div class="d-flex justify-content-between align-items-center mb-3 dx-page-header">
+    <h1 class="h4 mb-0">Twoje wizyty</h1>
+    <a href="{% url 'web-client-appointment-book' %}" class="btn btn-primary">Nowa rezerwacja</a>
+</div>
+<div class="card shadow-sm dx-flat-card"><div class="card-body">
+    {% if appointments %}
+    <div class="table-responsive">
+        <table class="table table-striped align-middle dx-flat-table">
+            <thead><tr><th>Termin</th><th>Pojazd</th><th>Stacja</th><th>Status</th><th class="text-end">Akcje</th></tr></thead>
+            <tbody>
+            {% for item in appointments %}
+                <tr>
+                    <td>
+                        <time datetime="{{ item.scheduled_at|date:'c' }}" class="fw-semibold">{{ item.scheduled_at|date:'d.m.Y H:i' }}</time>
+                    </td>
+                    <td>{{ item.vehicle.registration_number }}</td>
+                    <td>{{ item.station.name }}</td>
+                    <td>
+                        {% include 'web/includes/appointment_status_badge.html' with appointment=item %}
+                    </td>
+                    <td class="text-end dx-actions">
+                        <a href="{% url 'web-client-appointment-detail' item.id %}" class="btn btn-outline-secondary btn-sm">Szczegóły</a>
+                        {% if item.status == 'scheduled' or item.status == 'confirmed' %}
+                        <form method="post" action="{% url 'web-client-appointment-cancel' item.id %}" class="d-inline" data-confirm>
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Anuluj</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-muted mb-0">Brak wizyt.</p>
+    {% endif %}
+</div></div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% block title %}Panel administratora{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Panel administratora</h1>
+        <p class="text-muted mb-0">Podgląd kluczowych wskaźników, trendów i zdarzeń systemowych.</p>
+    </div>
+    <span class="badge text-bg-light border">
+        Zakres: {{ stats.date_from|date:'d.m.Y' }} - {{ stats.date_to|date:'d.m.Y' }}
+    </span>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body d-flex flex-wrap gap-2">
+        <a class="btn btn-primary btn-sm" href="{% url 'web-admin-users' %}">Zarządzaj użytkownikami</a>
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'web-admin-vehicles' %}">Przeglądaj pojazdy</a>
+    </div>
+</div>
+
+<form method="get" class="card shadow-sm mb-3">
+    <div class="card-body">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label" for="id_date_from">Data od</label>
+                <input id="id_date_from" class="form-control" type="date" name="date_from" value="{{ stats.date_from|date:'Y-m-d' }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="id_date_to">Data do</label>
+                <input id="id_date_to" class="form-control" type="date" name="date_to" value="{{ stats.date_to|date:'Y-m-d' }}">
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button class="btn btn-primary" type="submit">Filtruj</button>
+                <a class="btn btn-outline-secondary" href="{% url 'web-admin-dashboard' %}">Reset</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row g-3 mb-3">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Wykonane badania</div>
+                <div class="h3 mb-0">{{ stats.metrics.completed_inspections_total }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Pojazdy w systemie</div>
+                <div class="h3 mb-0">{{ stats.metrics.vehicles_total }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Dni w zakresie</div>
+                <div class="h3 mb-0">{{ stats.completed_inspections_daily|length }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small">Zdarzenia audytu</div>
+                <div class="h3 mb-0">{{ audit_events|length }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-1">Trend dzienny wykonanych badań</h2>
+                <span class="visually-hidden">Trend dzienny wykonanych badań</span>
+                <p class="text-muted small mb-3">Liczba zakończonych badań technicznych w kolejnych dniach.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th class="text-end">Liczba badań</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for point in stats.completed_inspections_daily %}
+                            <tr>
+                                <td>{{ point.date|date:'d.m.Y' }}</td>
+                                <td class="text-end fw-semibold">{{ point.count }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-muted">Brak danych w wybranym zakresie.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-1">Najczęściej badane typy pojazdów</h2>
+                <p class="text-muted small mb-3">Ranking typów pojazdów z badań w wybranym zakresie.</p>
+                <ul class="list-group list-group-flush">
+                    {% for item in stats.top_vehicle_types %}
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>
+                                {% if item.vehicle_type == 'passenger' %}
+                                    Osobowy
+                                {% elif item.vehicle_type == 'truck' %}
+                                    Ciężarowy
+                                {% elif item.vehicle_type == 'motorcycle' %}
+                                    Motocykl
+                                {% else %}
+                                    {{ item.vehicle_type }}
+                                {% endif %}
+                            </span>
+                            <span class="badge text-bg-secondary">{{ item.inspections_count }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted px-0">Brak danych.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-wrap mb-1">
+                    <h2 class="h5">Użytkownicy</h2>
+                    <a class="btn btn-primary btn-sm" href="{% url 'web-admin-users' %}">Zarządzaj</a>
+                </div>
+                <p class="text-muted small mb-3">Podgląd pierwszych 10 kont w systemie.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Imię i nazwisko</th>
+                                <th>Email</th>
+                                <th class="text-end">Rola</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for user_item in users %}
+                            <tr>
+                                <td>{{ user_item.first_name }} {{ user_item.last_name }}</td>
+                                <td>{{ user_item.email }}</td>
+                                <td class="text-end"><span class="badge text-bg-secondary">{{ user_item.role }}</span></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-muted">Brak danych.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-wrap mb-1">
+                    <h2 class="h5">Stacje diagnostyczne</h2>
+                </div>
+                <p class="text-muted small mb-3">Podgląd pierwszych 10 stacji i ich statusu.</p>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Stacja</th>
+                                <th class="text-end">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for station in stations %}
+                            <tr>
+                                <td>{{ station.name }}</td>
+                                <td class="text-end">
+                                    <span class="badge {% if station.is_active %}text-bg-success{% else %}text-bg-secondary{% endif %}">
+                                        {% if station.is_active %}Aktywna{% else %}Nieaktywna{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-muted">Brak danych.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Dziennik audytu finalizacji badania</h2>
+            <span class="text-muted small">{{ audit_events|length }} zdarzeń</span>
+        </div>
+        {% if audit_events %}
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Czas</th>
+                            <th>Wizyta</th>
+                            <th>Status</th>
+                            <th>Zdarzenie</th>
+                            <th>Aktor</th>
+                            <th>Wynik</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in audit_events %}
+                        <tr>
+                            <td>{{ event.created_at|date:'d.m.Y H:i' }}</td>
+                            <td>#{{ event.appointment_id }}</td>
+                            <td>{% include 'web/includes/appointment_status_badge.html' with appointment=event.appointment %}</td>
+                            <td>
+                                {% if event.event_type == 'inspection_finalized' %}
+                                    Finalizacja badania
+                                {% else %}
+                                    {{ event.event_type }}
+                                {% endif %}
+                            </td>
+                            <td>{{ event.actor.get_full_name|default:event.actor.email }}</td>
+                            <td>
+                                {% if event.payload.result == 'passed' %}
+                                    Pozytywny
+                                {% elif event.payload.result == 'failed' %}
+                                    Negatywny
+                                {% elif event.payload.result == 'conditional' %}
+                                    Warunkowy
+                                {% else %}
+                                    {{ event.payload.result|default:'-' }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">Brak zdarzeń w dzienniku audytu.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

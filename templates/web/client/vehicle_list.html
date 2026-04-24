@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Twoje pojazdy{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Twoje pojazdy</h1>
+    <a class="btn btn-primary" href="{% url 'web-client-vehicle-add' %}">Dodaj pojazd</a>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if vehicles %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead><tr><th>Rejestracja</th><th>VIN</th><th>Marka</th><th>Model</th><th>Rok</th><th>Typ</th><th></th></tr></thead>
+                <tbody>
+                {% for vehicle in vehicles %}
+                    <tr>
+                        <td>{{ vehicle.registration_number }}</td>
+                        <td>{{ vehicle.vin }}</td>
+                        <td>{{ vehicle.make }}</td>
+                        <td>{{ vehicle.model }}</td>
+                        <td>{{ vehicle.production_year }}</td>
+                        <td>{{ vehicle.get_vehicle_type_display }}</td>
+                        <td class="text-end">
+                            <a class="btn btn-outline-secondary btn-sm" href="{% url 'web-client-vehicle-detail' vehicle.id %}">Szczegóły</a>
+                            <a class="btn btn-outline-primary btn-sm" href="{% url 'web-client-vehicle-edit' vehicle.id %}">Edytuj</a>
+                            <form method="post" action="{% url 'web-client-vehicle-delete' vehicle.id %}" class="d-inline" data-confirm>
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-muted">Brak pojazdów.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Edycja użytkownika{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h4 mb-1">Edycja użytkownika</h1>
+                <p class="text-muted mb-0">Aktualizacja danych oraz nadawanie roli.</p>
+            </div>
+            <a href="{% url 'web-admin-users' %}" class="btn btn-outline-secondary btn-sm">Wróć do listy</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <p class="mb-3 small text-muted">Edytujesz konto: <strong>{{ user_obj.email }}</strong></p>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger form-errors">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}<div class="form-hint">{{ field.help_text }}</div>{% endif %}
+                            {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors|striptags }}</div>{% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                        <a href="{% url 'web-admin-users' %}" class="btn btn-outline-secondary">Anuluj</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

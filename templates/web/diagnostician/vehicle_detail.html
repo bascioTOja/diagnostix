@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Karta pojazdu {{ vehicle.registration_number }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h4 mb-1">Karta pojazdu {{ vehicle.registration_number }}</h1>
+        <p class="text-muted mb-0">Widok diagnosty otwarty na podstawie kodu QR.</p>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'web-diagnostician-schedule' %}">Wróć do harmonogramu</a>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <p class="mb-1"><strong>Numer rejestracyjny:</strong> {{ vehicle.registration_number }}</p>
+        <p class="mb-1"><strong>VIN:</strong> {{ vehicle.vin }}</p>
+        <p class="mb-1"><strong>Marka:</strong> {{ vehicle.make }}</p>
+        <p class="mb-1"><strong>Model:</strong> {{ vehicle.model }}</p>
+        <p class="mb-1"><strong>Rok produkcji:</strong> {{ vehicle.production_year }}</p>
+        <p class="mb-1"><strong>Typ pojazdu:</strong> {{ vehicle.get_vehicle_type_display }}</p>
+        <p class="mb-1"><strong>Kod QR:</strong> <code>{{ vehicle.qr_code }}</code></p>
+        <p class="mb-0">
+            <strong>Ważność badania:</strong>
+            <span class="badge text-bg-{{ validity_badge }}">{{ validity_label }}</span>
+            {% if validity_date %}
+                do {{ validity_date|date:'Y-m-d' }}
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Historia badań</h2>
+            <span class="text-muted small">Liczba wpisów: {{ inspections|length }}</span>
+        </div>
+        {% if inspections %}
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Data badania</th>
+                            <th>Wynik</th>
+                            <th>Wykryte usterki</th>
+                            <th>Zalecenia naprawy</th>
+                            <th>Data kolejnego badania</th>
+                            <th>Diagnosta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for inspection in inspections %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ inspection.created_at|date:'Y-m-d H:i' }}</div>
+                                {% if inspection.notes %}
+                                    <div class="small text-muted">{{ inspection.notes|truncatechars:90 }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if inspection.result == 'passed' %}
+                                    <span class="badge dx-badge dx-result-passed">Pozytywny</span>
+                                {% elif inspection.result == 'failed' %}
+                                    <span class="badge dx-badge dx-result-failed">Negatywny</span>
+                                {% elif inspection.result == 'conditional' %}
+                                    <span class="badge dx-badge dx-result-conditional">Warunkowy</span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary">{{ inspection.get_result_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ inspection.detected_defects|default:'-'|truncatechars:100 }}</td>
+                            <td>{{ inspection.repair_recommendations|default:'-'|truncatechars:100 }}</td>
+                            <td>{{ inspection.next_inspection_date|date:'Y-m-d'|default:'-' }}</td>
+                            <td>{{ inspection.diagnostician.get_full_name|default:inspection.diagnostician.email }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">Brak historii badań dla tego pojazdu.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

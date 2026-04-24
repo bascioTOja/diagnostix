@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Szczegóły wizyty {{ appointment.id }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Wizyta #{{ appointment.id }}</h1>
+        <p class="text-muted mb-0">Szczegóły terminu, pojazdu i przebiegu badania technicznego.</p>
+    </div>
+    <a href="{% url 'web-client-appointments' %}" class="btn btn-outline-secondary btn-sm">Wróć do listy wizyt</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <div>
+                        <div class="text-muted small">Termin badania</div>
+                        <div class="fw-semibold">{{ appointment.scheduled_at|date:'d.m.Y' }} o {{ appointment.scheduled_at|date:'H:i' }}</div>
+                    </div>
+                    {% include 'web/includes/appointment_status_badge.html' with appointment=appointment %}
+                </div>
+
+                <div class="row g-3 small">
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Stacja diagnostyczna</div>
+                        <div class="fw-semibold">{{ appointment.station.name }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Diagnosta</div>
+                        <div>{{ appointment.assigned_diagnostician.get_full_name|default:appointment.assigned_diagnostician.email|default:'Nie przypisano' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Pojazd</h2>
+                <div class="row g-3 small">
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Numer rejestracyjny</div>
+                        <div class="fw-semibold">{{ appointment.vehicle.registration_number }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">VIN</div>
+                        <div class="font-monospace">{{ appointment.vehicle.vin }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Marka i model</div>
+                        <div>{{ appointment.vehicle.make }} {{ appointment.vehicle.model }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Rok produkcji</div>
+                        <div>{{ appointment.vehicle.production_year }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Wynik badania</h2>
+                {% if appointment.inspection %}
+                    <div class="row g-3 small">
+                        <div class="col-md-6">
+                            <div class="text-muted mb-1">Wynik</div>
+                            <div>
+                                {% if appointment.inspection.result == 'passed' %}
+                                    <span class="badge dx-badge dx-result-passed">Pozytywny</span>
+                                {% elif appointment.inspection.result == 'failed' %}
+                                    <span class="badge dx-badge dx-result-failed">Negatywny</span>
+                                {% elif appointment.inspection.result == 'conditional' %}
+                                    <span class="badge dx-badge dx-result-conditional">Warunkowy</span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary">{{ appointment.inspection.get_result_display }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted mb-1">Kolejne badanie</div>
+                            <div>{{ appointment.inspection.next_inspection_date|date:'d.m.Y'|default:'Brak daty' }}</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="text-muted mb-1">Uwagi diagnosty</div>
+                            <div>{{ appointment.inspection.notes|default:'Brak uwag' }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted mb-1">Wykryte usterki</div>
+                            <div>{{ appointment.inspection.detected_defects|default:'Brak wpisu' }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted mb-1">Zalecenia naprawy</div>
+                            <div>{{ appointment.inspection.repair_recommendations|default:'Brak wpisu' }}</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">Dla tej wizyty nie zapisano jeszcze wyniku badania.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted mb-3">Podsumowanie wizyty</h2>
+                <p class="mb-2"><strong>ID wizyty:</strong><br>#{{ appointment.id }}</p>
+                <p class="mb-2"><strong>Data utworzenia:</strong><br>{{ appointment.created_at|date:'d.m.Y H:i' }}</p>
+                <p class="mb-2"><strong>Ostatnia aktualizacja:</strong><br>{{ appointment.updated_at|date:'d.m.Y H:i' }}</p>
+                <p class="mb-0"><strong>Utworzona przez:</strong><br>{{ appointment.created_by.get_full_name|default:appointment.created_by.email }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

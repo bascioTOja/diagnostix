@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Użytkownicy{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h4 mb-1">Lista użytkowników</h1>
+        <p class="text-muted mb-0">Przegląd kont oraz ról w systemie.</p>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'web-admin-dashboard' %}">Wróć do panelu</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if users %}
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Imię i nazwisko</th>
+                            <th>E-mail</th>
+                            <th>Rola</th>
+                            <th>Status</th>
+                            <th class="text-end">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user_item in users %}
+                        <tr>
+                            <td>{{ user_item.get_full_name|default:'-' }}</td>
+                            <td>{{ user_item.email }}</td>
+                            <td><span class="badge text-bg-secondary">{{ user_item.get_role_display }}</span></td>
+                            <td>
+                                {% if user_item.is_active %}
+                                    <span class="badge text-bg-success">Aktywne</span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary">Nieaktywne</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-primary btn-sm" href="{% url 'web-admin-user-edit' user_item.id %}">Edytuj</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">Brak użytkowników.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

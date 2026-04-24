@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Wynik badania{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Wynik badania</h1>
+        <p class="text-muted mb-0">Wizyta #{{ appointment.id }} - uzupełnij wynik i informacje dodatkowe.</p>
+    </div>
+    <a href="{% url 'web-diagnostician-appointment-detail' appointment.id %}" class="btn btn-outline-secondary btn-sm">Wróć do wizyty</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header">Formularz wyniku badania</div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger form-errors" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="mb-3" data-field-name="{{ field.name }}">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-hint">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="d-flex flex-wrap gap-2 pt-2">
+                        <button type="submit" class="btn btn-primary">Zapisz wynik</button>
+                        <a href="{% url 'web-diagnostician-appointment-detail' appointment.id %}" class="btn btn-outline-secondary">Anuluj i wróć</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted mb-3">Podsumowanie wizyty</h2>
+                <p class="mb-2"><strong>Termin:</strong><br><span class="text-muted">{{ appointment.scheduled_at|date:'d.m.Y H:i' }}</span></p>
+                <p class="mb-2"><strong>Klient:</strong><br><span class="text-muted">{{ appointment.client.get_full_name|default:appointment.client.email }}</span></p>
+                <p class="mb-2"><strong>Pojazd:</strong><br><span class="text-muted">{{ appointment.vehicle.registration_number }}</span></p>
+                <p class="mb-0"><strong>Stacja:</strong><br><span class="text-muted">{{ appointment.station.name }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        var resultSelect = document.querySelector('select[name="result"]');
+        var nextInspectionContainer = document.querySelector('[data-field-name="next_inspection_date"]');
+        var nextInspectionInput = nextInspectionContainer ? nextInspectionContainer.querySelector('input[name="next_inspection_date"]') : null;
+
+        function toggleNextInspectionDate() {
+            if (!resultSelect || !nextInspectionContainer) {
+                return;
+            }
+
+            var shouldHide = resultSelect.value === 'passed';
+            nextInspectionContainer.style.display = shouldHide ? 'none' : '';
+
+            if (shouldHide && nextInspectionInput) {
+                nextInspectionInput.value = '';
+            }
+        }
+
+        if (resultSelect) {
+            resultSelect.addEventListener('change', toggleNextInspectionDate);
+            toggleNextInspectionDate();
+        }
+
+        var firstErrorField = document.querySelector('.invalid-feedback.d-block');
+        if (!firstErrorField) {
+            return;
+        }
+        var fieldContainer = firstErrorField.closest('.mb-3');
+        if (!fieldContainer) {
+            return;
+        }
+        var input = fieldContainer.querySelector('input, select, textarea');
+        if (input) {
+            input.focus();
+        }
+    })();
+</script>
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Panel klienta{% endblock %}
+{% block content %}
+<section class="client-dashboard-hero mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1 class="h4 mb-1">Panel klienta</h1>
+            <p class="mb-0 text-muted">Szybki podgląd pojazdów i zaplanowanych wizyt.</p>
+        </div>
+        <a href="{% url 'web-client-appointment-book' %}" class="btn btn-primary btn-sm">Zarezerwuj badanie</a>
+    </div>
+</section>
+
+<div class="row g-3 mb-4 client-dashboard-stats">
+    <div class="col-md-6">
+        <div class="card shadow-sm client-stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="h6 mb-0 text-uppercase client-stat-title">Pojazdy</h2>
+                    <a href="{% url 'web-client-vehicles' %}" class="btn btn-outline-primary btn-sm">Zarządzaj pojazdami</a>
+                </div>
+                <p class="display-6 mb-0 mt-3 client-stat-value">{{ vehicles_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm client-stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="h6 mb-0 text-uppercase client-stat-title">Wizyty</h2>
+                    <a href="{% url 'web-client-appointments' %}" class="btn btn-outline-primary btn-sm">Lista wizyt</a>
+                </div>
+                <p class="display-6 mb-0 mt-3 client-stat-value">{{ appointments_count }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm client-upcoming-card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3 client-upcoming-header">
+            <h3 class="h5 mb-0">Nadchodzące wizyty</h3>
+            <span class="small text-muted">{{ upcoming_appointments|length }} pozycji</span>
+        </div>
+        {% if upcoming_appointments %}
+        <ul class="list-group list-group-flush client-upcoming-list">
+            {% for item in upcoming_appointments %}
+                <li class="list-group-item d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <div class="fw-semibold">{{ item.scheduled_at|date:'d.m.Y H:i' }} - {{ item.station.name }}</div>
+                        <div class="text-body-secondary">{{ item.vehicle.registration_number }} ({{ item.vehicle.make }} {{ item.vehicle.model }}, {{ item.vehicle.production_year }})</div>
+                        <div class="small text-muted">VIN: {{ item.vehicle.vin }}</div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end gap-2 client-upcoming-actions">
+                        {% include 'web/includes/appointment_status_badge.html' with appointment=item %}
+                        <a href="{% url 'web-client-appointment-detail' item.id %}" class="btn btn-outline-secondary btn-sm">Szczegóły</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p class="text-muted">Brak wizyt.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

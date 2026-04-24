@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Harmonogram diagnosty{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Harmonogram diagnosty</h1>
+        <p class="text-muted mb-0">Twoje przypisane wizyty, posortowane od najbliższej.</p>
+    </div>
+    <span class="badge text-bg-dark fs-6">Liczba wizyt: {{ appointments|length }}</span>
+</div>
+
+<div class="card shadow-sm border-0">
+    {% if appointments %}
+        <div class="list-group list-group-flush">
+            {% for item in appointments %}
+                <article class="list-group-item py-3 px-3 px-md-4">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <span class="fw-semibold">{{ item.scheduled_at|date:"d.m.Y" }} o {{ item.scheduled_at|date:"H:i" }}</span>
+                                {% include 'web/includes/appointment_status_badge.html' with appointment=item %}
+                            </div>
+
+                            <div class="row g-2 small">
+                                <div class="col-md-6">
+                                    <div><span class="text-muted">Pojazd:</span> <span class="fw-semibold">{{ item.vehicle.registration_number }}</span></div>
+                                    <div class="text-muted">{{ item.vehicle.make }} {{ item.vehicle.model }} ({{ item.vehicle.production_year }})</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div><span class="text-muted">Klient:</span> {{ item.client.get_full_name|default:item.client.email }}</div>
+                                    <div><span class="text-muted">Stacja:</span> {{ item.station.name }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column justify-content-between" style="width: 12rem;">
+                            <a class="btn btn-outline-primary btn-sm w-100" href="{% url 'web-diagnostician-appointment-detail' item.id %}">Szczegóły</a>
+                            {% if item.status == 'scheduled' or item.status == 'confirmed' %}
+                                <a class="btn btn-primary btn-sm w-100" href="{% url 'web-diagnostician-appointment-result' item.id %}">Wprowadź wynik</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card-body py-5 text-center">
+            <div class="mb-2 fs-2">--</div>
+            <h2 class="h5">Brak przypisanych wizyt</h2>
+            <p class="text-muted mb-3">Gdy administrator przypisze Ci terminy, pojawia się tutaj automatycznie.</p>
+            <a class="btn btn-outline-secondary" href="{% url 'web-home' %}">Wróć do strony głównej</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

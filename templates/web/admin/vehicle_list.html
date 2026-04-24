@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Pojazdy w systemie{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h4 mb-1">Wszystkie pojazdy</h1>
+        <p class="text-muted mb-0">Lista pojazdów zarejestrowanych w systemie.</p>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'web-admin-dashboard' %}">Wróć do panelu</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if vehicles %}
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Rejestracja</th>
+                            <th>Właściciel</th>
+                            <th>Marka / model</th>
+                            <th>Rok</th>
+                            <th>Typ</th>
+                            <th class="text-end">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for vehicle in vehicles %}
+                        <tr>
+                            <td>{{ vehicle.registration_number }}</td>
+                            <td>{{ vehicle.owner.get_full_name|default:vehicle.owner.email }}</td>
+                            <td>{{ vehicle.make }} {{ vehicle.model }}</td>
+                            <td>{{ vehicle.production_year }}</td>
+                            <td>{{ vehicle.get_vehicle_type_display }}</td>
+                            <td class="text-end">
+                                <form method="post" action="{% url 'web-admin-vehicle-delete' vehicle.id %}" class="d-inline" data-confirm>
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Usuń błędny wpis</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">Brak pojazdów w systemie.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% if appointment.status == 'scheduled' %}
+        <span class="badge dx-badge dx-status-scheduled">Zaplanowana</span>
+{% elif appointment.status == 'confirmed' %}
+        <span class="badge dx-badge dx-status-confirmed">Potwierdzona</span>
+{% elif appointment.status == 'completed' %}
+        <span class="badge dx-badge dx-status-completed">Zakończona</span>
+{% elif appointment.status == 'cancelled' %}
+        <span class="badge dx-badge dx-status-cancelled">Anulowana</span>
+{% elif appointment.status == 'no_show' %}
+        <span class="badge dx-badge dx-status-no-show">Nieobecność</span>
+{% else %}
+    <span class="badge text-bg-secondary">{{ appointment.get_status_display }}</span>
+{% endif %}
+

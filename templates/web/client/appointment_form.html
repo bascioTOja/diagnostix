@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Rezerwacja badania{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card">
+            <div class="card-header">Rezerwacja badania</div>
+            <div class="card-body p-4">
+                <p class="form-hint">Wybierz pojazd, stację oraz termin wizyty.</p>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger form-errors">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.vehicle.id_for_label }}">Pojazd</label>
+                        {{ form.vehicle }}
+                        {% if form.vehicle.errors %}<div class="text-danger small mt-1">{{ form.vehicle.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.station.id_for_label }}">Stacja diagnostyczna</label>
+                        {{ form.station }}
+                        {% if form.station.errors %}<div class="text-danger small mt-1">{{ form.station.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.booking_date.id_for_label }}">Data badania</label>
+                        {{ form.booking_date }}
+                        {% if form.booking_date.errors %}<div class="text-danger small mt-1">{{ form.booking_date.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="id_slot_choice">Dostępny termin (slot)</label>
+                        <select id="id_slot_choice" name="slot_choice" class="form-select" data-slot-url-template="{% url 'web-client-station-slots' 0 %}"></select>
+                        {% if form.slot_choice.errors %}<div class="text-danger small mt-1">{{ form.slot_choice.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.assigned_diagnostician.id_for_label }}">Przypisany diagnosta</label>
+                        {{ form.assigned_diagnostician }}
+                        {% if form.assigned_diagnostician.errors %}<div class="text-danger small mt-1">{{ form.assigned_diagnostician.errors|striptags }}</div>{% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Zarezerwuj</button>
+                        <a href="{% url 'web-client-appointments' %}" class="btn btn-outline-secondary">Wróć</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function(){
+  var select = document.getElementById("id_slot_choice");
+  if (select && select.dataset.slotUrlTemplate) {
+    select.dataset.slotUrlTemplate = select.dataset.slotUrlTemplate.replace("0/", "__station_id__/");
+  }
+})();
+</script>
+{% endblock %}
+

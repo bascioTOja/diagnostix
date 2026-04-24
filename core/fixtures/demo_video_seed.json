@@ -1,0 +1,465 @@
+[
+  {
+    "model": "users.customuser",
+    "pk": 201,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$9BAvNgvTiGHBVRR3tsFgfA$4xMlmR0oJpMupTs97545p08/CoFlZhekYfIktUOglMc=",
+      "last_login": null,
+      "is_superuser": true,
+      "email": "admin.demo@diagnostix.com",
+      "first_name": "Anna",
+      "last_name": "Admin",
+      "role": "administrator",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-01-15T08:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 202,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$9BAvNgvTiGHBVRR3tsFgfA$4xMlmR0oJpMupTs97545p08/CoFlZhekYfIktUOglMc=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "diag.jk@diagnostix.com",
+      "first_name": "Jan",
+      "last_name": "Kowalski",
+      "role": "diagnosta",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-20T09:30:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 203,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$9BAvNgvTiGHBVRR3tsFgfA$4xMlmR0oJpMupTs97545p08/CoFlZhekYfIktUOglMc=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "diag.mn@diagnostix.com",
+      "first_name": "Marta",
+      "last_name": "Nowak",
+      "role": "diagnosta",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-21T09:30:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 204,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$9BAvNgvTiGHBVRR3tsFgfA$4xMlmR0oJpMupTs97545p08/CoFlZhekYfIktUOglMc=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "natalia.wisniewska@diagnostix.com",
+      "first_name": "Ewa",
+      "last_name": "Wisniewska",
+      "role": "klient",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-02-03T11:15:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 205,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$9BAvNgvTiGHBVRR3tsFgfA$4xMlmR0oJpMupTs97545p08/CoFlZhekYfIktUOglMc=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "piotr.zielinski@diagnostix.com",
+      "first_name": "Piotr",
+      "last_name": "Zielinski",
+      "role": "klient",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-02-07T12:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.customuser",
+    "pk": 206,
+    "fields": {
+      "password": "pbkdf2_sha256$1200000$9BAvNgvTiGHBVRR3tsFgfA$4xMlmR0oJpMupTs97545p08/CoFlZhekYfIktUOglMc=",
+      "last_login": null,
+      "is_superuser": false,
+      "email": "ola.krupa@diagnostix.com",
+      "first_name": "Aleksandra",
+      "last_name": "Krupa",
+      "role": "klient",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-02-10T13:20:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+
+  {
+    "model": "vehicles.diagnosticstation",
+    "pk": 201,
+    "fields": {
+      "created_at": "2026-01-15T08:00:00Z",
+      "updated_at": "2026-01-15T08:00:00Z",
+      "name": "Stacja Demo Centrum",
+      "is_active": true,
+      "slot_duration_minutes": 30
+    }
+  },
+  {
+    "model": "vehicles.diagnosticstation",
+    "pk": 202,
+    "fields": {
+      "created_at": "2026-01-15T08:00:00Z",
+      "updated_at": "2026-01-15T08:00:00Z",
+      "name": "Stacja Demo Polnoc",
+      "is_active": true,
+      "slot_duration_minutes": 20
+    }
+  },
+
+  {
+    "model": "vehicles.vehicle",
+    "pk": 201,
+    "fields": {
+      "created_at": "2026-02-03T12:00:00Z",
+      "updated_at": "2026-02-03T12:00:00Z",
+      "owner": 204,
+      "registration_number": "WWE4567",
+      "vin": "WVWZZZ1JZXW765432",
+      "qr_code": "qr-demo-201",
+      "make": "Skoda",
+      "model": "Octavia",
+      "production_year": 2019,
+      "vehicle_type": "passenger"
+    }
+  },
+  {
+    "model": "vehicles.vehicle",
+    "pk": 202,
+    "fields": {
+      "created_at": "2026-02-08T10:20:00Z",
+      "updated_at": "2026-02-08T10:20:00Z",
+      "owner": 205,
+      "registration_number": "WPI9087",
+      "vin": "VF3CC9HZNDT123456",
+      "qr_code": "qr-demo-202",
+      "make": "Peugeot",
+      "model": "308",
+      "production_year": 2017,
+      "vehicle_type": "passenger"
+    }
+  },
+  {
+    "model": "vehicles.vehicle",
+    "pk": 203,
+    "fields": {
+      "created_at": "2026-02-10T14:00:00Z",
+      "updated_at": "2026-02-10T14:00:00Z",
+      "owner": 205,
+      "registration_number": "WSC1122",
+      "vin": "WAUZZZ8K9CA654321",
+      "qr_code": "qr-demo-203",
+      "make": "Audi",
+      "model": "A4",
+      "production_year": 2014,
+      "vehicle_type": "passenger"
+    }
+  },
+  {
+    "model": "vehicles.vehicle",
+    "pk": 204,
+    "fields": {
+      "created_at": "2026-02-11T09:10:00Z",
+      "updated_at": "2026-02-11T09:10:00Z",
+      "owner": 206,
+      "registration_number": "WKR3301",
+      "vin": "SUUZZZ61ZEM987654",
+      "qr_code": "qr-demo-204",
+      "make": "Subaru",
+      "model": "Forester",
+      "production_year": 2020,
+      "vehicle_type": "passenger"
+    }
+  },
+  {
+    "model": "vehicles.vehicle",
+    "pk": 205,
+    "fields": {
+      "created_at": "2026-02-12T09:10:00Z",
+      "updated_at": "2026-02-12T09:10:00Z",
+      "owner": 206,
+      "registration_number": "WRA7755",
+      "vin": "JH4KA4650MC012345",
+      "qr_code": "qr-demo-205",
+      "make": "Honda",
+      "model": "CB500",
+      "production_year": 2021,
+      "vehicle_type": "motorcycle"
+    }
+  },
+
+  {
+    "model": "appointments.appointment",
+    "pk": 201,
+    "fields": {
+      "created_at": "2026-02-20T08:00:00Z",
+      "updated_at": "2026-02-20T08:00:00Z",
+      "vehicle": 201,
+      "client": 204,
+      "station": 201,
+      "scheduled_at": "2026-03-01T08:30:00Z",
+      "status": "completed",
+      "assigned_diagnostician": 202,
+      "created_by": 204
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 202,
+    "fields": {
+      "created_at": "2026-02-22T09:00:00Z",
+      "updated_at": "2026-02-22T09:00:00Z",
+      "vehicle": 202,
+      "client": 205,
+      "station": 202,
+      "scheduled_at": "2026-03-10T10:00:00Z",
+      "status": "completed",
+      "assigned_diagnostician": 203,
+      "created_by": 205
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 203,
+    "fields": {
+      "created_at": "2026-03-01T11:20:00Z",
+      "updated_at": "2026-03-01T11:20:00Z",
+      "vehicle": 203,
+      "client": 205,
+      "station": 201,
+      "scheduled_at": "2026-03-25T11:00:00Z",
+      "status": "cancelled",
+      "assigned_diagnostician": 202,
+      "created_by": 205
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 204,
+    "fields": {
+      "created_at": "2026-03-05T13:00:00Z",
+      "updated_at": "2026-03-05T13:00:00Z",
+      "vehicle": 204,
+      "client": 206,
+      "station": 202,
+      "scheduled_at": "2026-04-05T13:30:00Z",
+      "status": "no_show",
+      "assigned_diagnostician": 203,
+      "created_by": 206
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 205,
+    "fields": {
+      "created_at": "2026-03-06T07:45:00Z",
+      "updated_at": "2026-03-06T07:45:00Z",
+      "vehicle": 205,
+      "client": 206,
+      "station": 201,
+      "scheduled_at": "2026-04-10T07:30:00Z",
+      "status": "completed",
+      "assigned_diagnostician": 202,
+      "created_by": 206
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 206,
+    "fields": {
+      "created_at": "2026-04-10T12:10:00Z",
+      "updated_at": "2026-04-10T12:10:00Z",
+      "vehicle": 201,
+      "client": 204,
+      "station": 202,
+      "scheduled_at": "2026-04-22T09:00:00Z",
+      "status": "confirmed",
+      "assigned_diagnostician": 203,
+      "created_by": 204
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 207,
+    "fields": {
+      "created_at": "2026-04-10T12:30:00Z",
+      "updated_at": "2026-04-10T12:30:00Z",
+      "vehicle": 202,
+      "client": 205,
+      "station": 201,
+      "scheduled_at": "2026-04-24T10:00:00Z",
+      "status": "scheduled",
+      "assigned_diagnostician": 202,
+      "created_by": 205
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 208,
+    "fields": {
+      "created_at": "2026-04-10T13:00:00Z",
+      "updated_at": "2026-04-10T13:00:00Z",
+      "vehicle": 203,
+      "client": 205,
+      "station": 202,
+      "scheduled_at": "2026-05-06T15:00:00Z",
+      "status": "confirmed",
+      "assigned_diagnostician": 203,
+      "created_by": 205
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 209,
+    "fields": {
+      "created_at": "2026-04-11T09:40:00Z",
+      "updated_at": "2026-04-11T09:40:00Z",
+      "vehicle": 204,
+      "client": 206,
+      "station": 201,
+      "scheduled_at": "2026-05-14T08:00:00Z",
+      "status": "scheduled",
+      "assigned_diagnostician": 202,
+      "created_by": 206
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 210,
+    "fields": {
+      "created_at": "2026-04-11T10:10:00Z",
+      "updated_at": "2026-04-11T10:10:00Z",
+      "vehicle": 205,
+      "client": 206,
+      "station": 202,
+      "scheduled_at": "2026-06-02T12:40:00Z",
+      "status": "confirmed",
+      "assigned_diagnostician": 203,
+      "created_by": 206
+    }
+  },
+
+  {
+    "model": "inspections.inspection",
+    "pk": 201,
+    "fields": {
+      "created_at": "2026-03-01T08:55:00Z",
+      "updated_at": "2026-03-01T08:55:00Z",
+      "appointment": 201,
+      "result": "passed",
+      "notes": "Badanie zakonczone wynikiem pozytywnym.",
+      "next_inspection_date": null,
+      "diagnostician": 202
+    }
+  },
+  {
+    "model": "inspections.inspection",
+    "pk": 202,
+    "fields": {
+      "created_at": "2026-03-10T10:35:00Z",
+      "updated_at": "2026-03-10T10:35:00Z",
+      "appointment": 202,
+      "result": "failed",
+      "notes": "Nadmierne luzy w ukladzie kierowniczym.",
+      "next_inspection_date": "2026-04-01",
+      "diagnostician": 203
+    }
+  },
+  {
+    "model": "inspections.inspection",
+    "pk": 203,
+    "fields": {
+      "created_at": "2026-04-10T07:55:00Z",
+      "updated_at": "2026-04-10T07:55:00Z",
+      "appointment": 205,
+      "result": "conditional",
+      "notes": "Wynik warunkowy, zalecana kontrola oswietlenia.",
+      "next_inspection_date": null,
+      "diagnostician": 202
+    }
+  },
+
+  {
+    "model": "notifications.notification",
+    "pk": 201,
+    "fields": {
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T09:00:00Z",
+      "user": 204,
+      "type": "inspection_result",
+      "channel": "in_app",
+      "status": "sent",
+      "scheduled_for": "2026-03-01T08:58:00Z",
+      "sent_at": "2026-03-01T09:00:00Z",
+      "dedupe_key": "inspection_result:201",
+      "payload": {
+        "inspection_id": 201,
+        "result": "passed"
+      }
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 202,
+    "fields": {
+      "created_at": "2026-03-10T10:40:00Z",
+      "updated_at": "2026-03-10T10:40:00Z",
+      "user": 205,
+      "type": "inspection_result",
+      "channel": "in_app",
+      "status": "sent",
+      "scheduled_for": "2026-03-10T10:36:00Z",
+      "sent_at": "2026-03-10T10:40:00Z",
+      "dedupe_key": "inspection_result:202",
+      "payload": {
+        "inspection_id": 202,
+        "result": "failed"
+      }
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 203,
+    "fields": {
+      "created_at": "2026-04-21T08:00:00Z",
+      "updated_at": "2026-04-21T08:00:00Z",
+      "user": 204,
+      "type": "appointment_reminder",
+      "channel": "email",
+      "status": "pending",
+      "scheduled_for": "2026-04-21T08:00:00Z",
+      "sent_at": null,
+      "dedupe_key": "appointment_reminder:206",
+      "payload": {
+        "appointment_id": 206,
+        "scheduled_at": "2026-04-22T09:00:00Z"
+      }
+    }
+  }
+]
+
+

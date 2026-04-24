@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Wizyta {{ appointment.id }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Wizyta #{{ appointment.id }}</h1>
+        <p class="text-muted mb-0">Szczegóły przypisanej wizyty i wynik badania technicznego.</p>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'web-diagnostician-schedule' %}">Wróć do harmonogramu</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-10">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                    <span class="fw-semibold">{{ appointment.scheduled_at|date:'d.m.Y' }} o {{ appointment.scheduled_at|date:'H:i' }}</span>
+                    {% include 'web/includes/appointment_status_badge.html' with appointment=appointment %}
+                </div>
+                <div class="row g-3 small">
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Pojazd</div>
+                        <div class="fw-semibold">{{ appointment.vehicle.registration_number }}</div>
+                        <div class="text-muted">{{ appointment.vehicle.make }} {{ appointment.vehicle.model }} ({{ appointment.vehicle.production_year }})</div>
+                        <div class="small mt-2"><span class="text-muted">Kod QR:</span> <code>{{ appointment.vehicle.qr_code }}</code></div>
+                        <div class="small"><a href="{{ vehicle_qr_path }}">Otwórz kartę pojazdu po QR</a></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted mb-1">Klient</div>
+                        <div>{{ appointment.client.get_full_name|default:appointment.client.email }}</div>
+                        <div class="text-muted">{{ appointment.client.email }}</div>
+                        <div class="text-muted mt-2 mb-1">Stacja</div>
+                        <div>{{ appointment.station.name }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Wynik badania</h2>
+                {% if appointment.inspection %}
+                    <p class="mb-1">
+                        <strong>Wynik:</strong>
+                        {% if appointment.inspection.result == 'passed' %}
+                            <span class="badge dx-badge dx-result-passed">Pozytywny</span>
+                        {% elif appointment.inspection.result == 'failed' %}
+                            <span class="badge dx-badge dx-result-failed">Negatywny</span>
+                        {% elif appointment.inspection.result == 'conditional' %}
+                            <span class="badge dx-badge dx-result-conditional">Warunkowy</span>
+                        {% else %}
+                            <span class="badge text-bg-secondary">{{ appointment.inspection.get_result_display }}</span>
+                        {% endif %}
+                    </p>
+                    <p class="mb-1"><strong>Data kolejnego badania:</strong> {{ appointment.inspection.next_inspection_date|date:'d.m.Y'|default:'-' }}</p>
+                    <p class="mb-1"><strong>Uwagi:</strong> {{ appointment.inspection.notes|default:'-' }}</p>
+                    <p class="mb-1"><strong>Wykryte usterki:</strong> {{ appointment.inspection.detected_defects|default:'-' }}</p>
+                    <p class="mb-0"><strong>Zalecenia naprawy:</strong> {{ appointment.inspection.repair_recommendations|default:'-' }}</p>
+                {% else %}
+                    <p class="text-muted mb-0">Dla tej wizyty nie wprowadzono jeszcze wyniku badania.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

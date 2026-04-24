@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Profil{% endblock %}
+{% block content %}
+<div class="row g-3 align-items-start">
+    <div class="col-lg-8">
+        <div class="card profile-card">
+            <div class="card-header d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <h1 class="h5 mb-1">Profil</h1>
+                    <p class="form-hint mb-0">Zaktualizuj dane kontaktowe i ustawienia konta.</p>
+                </div>
+                <span class="badge profile-role-badge">{{ user.get_role_display }}</span>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger form-errors mb-3">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        {% for field in form %}
+                            <div class="col-12">
+                                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-hint mt-1">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                        <a href="{% url 'web-home' %}" class="btn btn-outline-secondary">Powrót</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card profile-summary-card">
+            <div class="card-header">Podsumowanie konta</div>
+            <div class="card-body">
+                <p class="mb-2"><strong>Imie i nazwisko:</strong><br>{{ user.get_full_name|default:'Brak danych' }}</p>
+                <p class="mb-2"><strong>Email:</strong><br>{{ user.email }}</p>
+                <p class="mb-2"><strong>Rola:</strong> {{ user.get_role_display }}</p>
+                <p class="mb-2"><strong>Konto od:</strong> {{ user.date_joined|date:'Y-m-d H:i' }}</p>
+                <p class="mb-0"><strong>Ostatnie logowanie:</strong> {{ user.last_login|date:'Y-m-d H:i'|default:'Brak danych' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

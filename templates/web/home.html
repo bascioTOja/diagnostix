@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block title %}Diagnostix - Start{% endblock %}
+{% block content %}
+<div class="p-4 p-md-5 mb-4 bg-white rounded-3 shadow-sm border">
+    {% if user.is_authenticated %}
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <div class="col-lg-8 px-0">
+                <h1 class="display-6 mb-2">Witaj w Diagnostix</h1>
+                {% if user.role == 'klient' %}
+                    <p class="lead mb-0">Zarządzaj pojazdami, rezerwuj terminy i kontroluj historię badań.</p>
+                {% elif user.role == 'diagnosta' %}
+                    <p class="lead mb-0">Sprawdź przypisane wizyty i szybko uzupełniaj wyniki badań technicznych.</p>
+                {% elif user.role == 'administrator' %}
+                    <p class="lead mb-0">Monitoruj działanie systemu, statystyki i aktywność użytkowników.</p>
+                {% else %}
+                    <p class="lead mb-0">Przejdź do swojego panelu i kontynuuj pracę.</p>
+                {% endif %}
+            </div>
+            <span class="badge text-bg-dark fs-6">{{ user.get_full_name|default:user.email }}</span>
+        </div>
+    {% else %}
+        <div class="col-md-8">
+            <h1 class="display-6">System obsługi badań technicznych</h1>
+            <p class="lead">Rezerwuj wizyty, zarządzaj pojazdami i przeglądaj historię badań w jednym miejscu.</p>
+            <a class="btn btn-primary" href="{% url 'web-register' %}">Załóż konto</a>
+            <a class="btn btn-outline-secondary" href="{% url 'web-login' %}">Zaloguj się</a>
+        </div>
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+    <div class="row g-3 mb-4">
+        {% if user.role == 'klient' %}
+            <div class="col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Pojazdy</h2>
+                        <p class="mb-3">Dodawaj i aktualizuj dane swoich pojazdów.</p>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'web-client-vehicles' %}">Zarządzaj pojazdami</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Wizyty</h2>
+                        <p class="mb-3">Rezerwuj termin i sprawdzaj status badań.</p>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'web-client-appointments' %}">Lista wizyt</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Szybka akcja</h2>
+                        <p class="mb-3">Rozpocznij nową rezerwację jednym kliknięciem.</p>
+                        <a class="btn btn-primary btn-sm" href="{% url 'web-client-appointment-book' %}">Nowa rezerwacja</a>
+                    </div>
+                </div>
+            </div>
+        {% elif user.role == 'diagnosta' %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Harmonogram</h2>
+                        <p class="mb-3">Przeglądaj najbliższe wizyty przypisane do Ciebie.</p>
+                        <a class="btn btn-primary btn-sm" href="{% url 'web-diagnostician-schedule' %}">Otwórz harmonogram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Konto</h2>
+                        <p class="mb-3">Aktualizuj dane konta i przejdź do profilu.</p>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'web-profile' %}">Przejdź do profilu</a>
+                    </div>
+                </div>
+            </div>
+        {% elif user.role == 'administrator' %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Panel administratora</h2>
+                        <p class="mb-3">Sprawdź statystyki, użytkowników i audit trail.</p>
+                        <a class="btn btn-primary btn-sm" href="{% url 'web-admin-dashboard' %}">Otwórz panel</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h2 class="h6 text-uppercase text-muted">Profil</h2>
+                        <p class="mb-3">Przejdź do ustawień konta administratora.</p>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'web-profile' %}">Przejdź do profilu</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <div>
+                            <h2 class="h6 text-uppercase text-muted mb-1">Start</h2>
+                            <p class="mb-0">Nie rozpoznano roli konta. Przejdź do profilu, aby sprawdzić uprawnienia.</p>
+                        </div>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'web-profile' %}">Przejdź do profilu</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Co dalej?</h2>
+            {% if user.role == 'klient' %}
+                <ol class="mb-0">
+                        <li>Zweryfikuj dane pojazdów.</li>
+                            <li>Zarezerwuj nową wizytę lub sprawdź status aktualnych.</li>
+                            <li>Przejrzyj szczegóły wizyt i historię badań.</li>
+                </ol>
+            {% elif user.role == 'diagnosta' %}
+                <ol class="mb-0">
+                    <li>Otwórz harmonogram i wybierz najbliższą wizytę.</li>
+                    <li>Przejdź do szczegółów pojazdu i klienta.</li>
+                    <li>Wprowadź wynik badania i uzupełnij uwagi.</li>
+                </ol>
+            {% elif user.role == 'administrator' %}
+                <ol class="mb-0">
+                    <li>Sprawdź trendy badań w aktualnym zakresie dat.</li>
+                    <li>Monitoruj aktywność użytkowników i stacji.</li>
+                    <li>Weryfikuj audit trail finalizacji badań.</li>
+                </ol>
+            {% else %}
+                <p class="mb-0 text-muted">Przejdź do profilu i sprawdź konfigurację konta.</p>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h2 class="h6 text-uppercase text-muted">Dla klienta</h2>
+                    <p class="mb-0">Rezerwacje online, lista pojazdów i historia badań zawsze pod ręką.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h2 class="h6 text-uppercase text-muted">Dla diagnosty</h2>
+                    <p class="mb-0">Harmonogram wizyt i szybkie zapisywanie wyników badań.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h2 class="h6 text-uppercase text-muted">Dla administratora</h2>
+                    <p class="mb-0">Panel statystyk, kontrola systemu i audit trail wydarzeń.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
